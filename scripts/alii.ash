@@ -223,7 +223,3 @@ void smoke() {
 	cli_execute("raffle 11");
 	print("Done!", "teal");
 }
-
-void test(){
-	print("test");
-}
