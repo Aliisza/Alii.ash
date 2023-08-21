@@ -93,6 +93,11 @@ void coffee() {
 }
 
 void ascend() {
+	if(my_inebriety() <= inebriety_limit()){
+		abort("You have not nightcapped yet! Overdrink and burn turns, then run again!");
+	}else if(my_inebriety() > inebriety_limit() && my_adventures() > 0){
+		abort("You have nightcapped, but have turns remaining! Burn turns, then run again!");
+	}
 	print("Jumping through the Gash!", "teal");
 	HandleC2T();
 	wait(5);
@@ -222,4 +227,8 @@ void smoke() {
 	}
 	cli_execute("raffle 11");
 	print("Done!", "teal");
+}
+
+void test(){
+	print("test two");
 }

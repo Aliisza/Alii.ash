@@ -7,7 +7,7 @@ But you'll need to look over it and modify things that it does that you don't wa
 
 To install, paste the following into the CGLI:
 
-`git checkout https://github.com/Myrcyr/Alii.ash`
+`git checkout https://github.com/Myrcyr/Alii.ash
 
 To run, type `alii "tasks"` into the CGLI. 
 
@@ -18,7 +18,6 @@ List of abbreviations:
 cloop, gloop, post
 
 Examples of possible calls:
-
 `alii cloop` Runs a full day while looping CS and doing yachtzeechains.
 
 `alii gloop` Runs a full day while glooping and only yachtzee's for breakfast.
@@ -29,25 +28,25 @@ Examples of possible calls:
 
 
 ## Script Dependancies:
-loopgyou          -automates the grey you runs.
+loopgyou		-automates the grey you runs.
 
-lcswrapper          -automates the cs runs(can use any script, just have to edit the lunch function).
+lcswrapper		-automates the cs runs(can use any script, just have to edit the lunch function).
 
-garbo          -farming script.
+garbo			-farming script.
 
-PandAliisza          -steel marg script which utilizes banderboots runs.
+PandAliisza 		-steel marg script which utilizes banderboots runs.
 
-c2t_ascend          -handles valhalla.
+c2t_ascend 		-handles valhalla.
 
-zlib          -only nessasary for me. handles kmail function.
+zlib			-only nessasary for me. handles kmail function.
 
-ptrack          -profit tracking.
+ptrack			-profit tracking.
 
-CONSUME          -handles nightcaping.
+CONSUME			-handles nightcaping.
 
-levelup          -handles leveling up after gyou run.
+levelup			-handles leveling up after gyou run.
 
-rollover management          -handles equipping PJs and other stuff(old script, probably outdated, could drop but I'm fond of it).
+rollover management	-handles equipping PJs and other stuff(old script, probably outdated, could drop but I'm fond of it).
 
 
 Happy Looping!
