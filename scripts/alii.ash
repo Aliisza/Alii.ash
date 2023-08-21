@@ -9,7 +9,6 @@ void main(string settings) {
 		cs,
 		lunch,
 		smoke,
-		test
 	] available_choices[task] = false;
 	// abbreviations
 	string[string] abbreviations = {
@@ -31,7 +30,7 @@ void main(string settings) {
 		}
 	}
 	// selected tasks run in this order:
-	foreach task in $strings[coffee, ascend, gyou, cs, lunch, smoke, test]
+	foreach task in $strings[coffee, ascend, gyou, cs, lunch, smoke]
 		if (available_choices[task])
 			call void task();
 }
@@ -227,8 +226,4 @@ void smoke() {
 	}
 	cli_execute("raffle 11");
 	print("Done!", "teal");
-}
-
-void test(){
-	print("test two");
 }
