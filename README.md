@@ -7,7 +7,7 @@ But you'll need to look over it and modify things that it does that you don't wa
 
 To install, paste the following into the CGLI:
 
-`git checkout https://github.com/Myrcyr/Alii.ash
+`git checkout https://github.com/Myrcyr/Alii.ash`
 
 To run, type `alii "tasks"` into the CGLI. 
 
