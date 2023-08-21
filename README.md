@@ -1,4 +1,4 @@
-# kolmafia-LCSWrapper
+# kolmafia-Alii.ash
 
 KoL Script to handle looping if your name is Aliisza. This script does some things that are super specific to me personally. It will work for anyone who wants to either loop cs, or gyou. 
 But you'll need to look over it and modify things that it does that you don't want it to.
