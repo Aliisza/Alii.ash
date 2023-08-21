@@ -126,8 +126,9 @@ void lunch() {
 	if ((!get_property('moonTuned').to_boolean()) && (my_sign() != "Wombat") && (available_amount($item[Hewn moon-rune spoon]).to_boolean()) ) {
 	foreach sl in $slots[acc1, acc2, acc3] {
 		if (equipped_item(sl) == $item[Hewn moon-rune spoon]) {
-			equip(sl, $item[none]);
+		equip(sl, $item[none]);
 		}
+	}
 	}
 	visit_url("inv_use.php?whichitem=10254&doit=96&whichsign=7");
 	//monkey paw wishes cause garbo does silly things in post gyou leg
