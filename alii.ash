@@ -1,6 +1,7 @@
+import <zlib.ash>
+boolean[string] available_choices;
 void main(string settings) {
 	// task keywords
-	boolean[string] available_choices;
 	foreach task in $strings[
 		coffee,
 		ascend,
@@ -17,13 +18,13 @@ void main(string settings) {
 		"cloop":"coffee ascend cs smoke"
 	};
 	// parse settings
-	foreach i,key in settings.split_string(" ") {
-		if (abbreviations contains key.to_lower_case()) {
+	foreach i,key in settings.to_lower_case().split_string(" ") {
+		if (abbreviations contains key) {
 			print(`Running choice {key}!`, "teal");
 			foreach i,task in abbreviations[key].split_string(" ")
 				available_choices[task] = true;
 		}
-		else if (available_choices contains key.to_lower_case()) {
+		else if (available_choices contains key) {
 			print(`Running choice {key}!`, "teal");
 			available_choices[key] = true;
 		}
@@ -32,6 +33,37 @@ void main(string settings) {
 	foreach task in $strings[coffee, ascend, gyou, cs, lunch, smoke]
 		if (available_choices[task])
 			call void task();
+}
+
+void HandleC2T() {
+	if (available_choices["gyou"]) {
+		set_property("c2t_ascend", "2,27,2,44,8,5046,5039,2,0");
+	}
+	if (available_choices["cs"]) {
+		set_property("c2t_ascend", "2,3,2,25,2,5046,5040,2,0");
+	}
+}
+
+void yachtzee() {
+	if (my_inebriety() > inebriety_limit()) {
+		print("We're overdrunk. Running Garbo overdrunk turns.", "blue");
+		cli_execute("garbo");
+	}
+
+	if (get_property(to_int("ascensionsToday")) == 1) {
+		if (to_boolean(available_choices["gyou"])) {
+			print("We have ascended today and it was a gyou run. We will not Yachtzeechain this leg.", "blue");
+			cli_execute("garbo");
+		}
+		else {
+			print("We have ascended today, and it was a CS run. We will Yachtzeechain this leg.", "blue");
+			cli_execute("garbo yachtzeechain");
+		}
+	}
+	else {
+		print("We have not ascended today. Breakfast leg always does Yachtzee!", "blue");
+		cli_execute("garbo yachtzeechain ascend workshed=cmc");
+	}
 }
 
 void coffee() {
@@ -50,7 +82,7 @@ void coffee() {
 		else {
 			print("Tofu is more expensive than would be vialble. Skipping Tofu.");
 		}
-	} /* FYI: Garbo usually doesn't use one of these, so free 5 adventures. Yay!*/
+	} // FYI: Garbo usually doesn't use one of these, so free 5 adventures. Yay!
 	yachtzee();
 	cli_execute("shrug ur-kel");
 	cli_execute("drink stillsuit distillate");
@@ -84,7 +116,6 @@ void gyou() {
 	cli_execute("loopgyou");
 	if (my_adventures() >= 41) {
 		cli_execute("PandAliisza 40");//call using 40 as arg. Should execute script but stop when ever advs remaining is == 40
-		//abort("We have more than 40 adventures remaining after the run! Please manually spend them down to 40 before breaking prism.");
 	}
 	print("Breaking the Prism in t-10 seconds", "teal");
 	waitq(16);
@@ -112,7 +143,7 @@ void lunch() {
 	drink($item[Steel margarita]);
 	use($item[Asdon Martin keyfob]);
 	//janky handling of using shotglass to make use of the +5 turns from blender before swapping to Wombat.
-	if (!get_property("_mimeArmyShotglassUsed").to_boolean()) {
+	if (!to_boolean(get_property("_mimeArmyShotglassUsed"))) {
 		print("We have not used shotglass yet.");
 		if (item_amount($item[astral six-pack]) > 0) {
 			use($item[astral six-pack]);
@@ -124,11 +155,11 @@ void lunch() {
 	}
 	//tuning to wombat
 	if ((!get_property('moonTuned').to_boolean()) && (my_sign() != "Wombat") && (available_amount($item[Hewn moon-rune spoon]).to_boolean()) ) {
-	foreach sl in $slots[acc1, acc2, acc3] {
-		if (equipped_item(sl) == $item[Hewn moon-rune spoon]) {
-		equip(sl, $item[none]);
+		foreach sl in $slots[acc1, acc2, acc3] {
+			if (equipped_item(sl) == $item[Hewn moon-rune spoon]) {
+				equip(sl, $item[none]);
+			}
 		}
-	}
 	}
 	visit_url("inv_use.php?whichitem=10254&doit=96&whichsign=7");
 	//monkey paw wishes cause garbo does silly things in post gyou leg
@@ -144,7 +175,7 @@ void smoke() {
 	cli_execute("ptrack add smokeBegin");
 	cli_execute("breakfast");
 	cli_execute("/whitelist cgc");
-	if (!available_amount($item[carpe])) {
+	if (!(available_amount($item[carpe]) > 1)) {
 		cli_execute("acquire carpe");
 	}
 		if (!get_property("_essentialTofuUsed").to_boolean()) {
@@ -172,7 +203,7 @@ void smoke() {
 	}
 	if (item_amount($item[Clockwork Maid]).to_boolean()) {
 		use(1, $item[Clockwork Maid]);
-	} /* Refrains from using a clockwork maid if you it's lower then 8x VOA */
+	} // Refrains from using a clockwork maid if you it's lower then 8x VOA 
 	cli_execute("rollover management.ash");
 	//Simplest jank way of ensuring that Sasq watch is equipped over ticksliver as I don't care about fites
 	if (equipped_item($slot[acc3]) == $item[ticksilver ring]) {
@@ -190,35 +221,4 @@ void smoke() {
 	}
 	cli_execute("raffle 11");
 	print("Done!", "teal");
-}
-
-void HandleC2T() {
-	if (to_boolean(available_choices["gyou"])) {
-		set_property("c2t_ascend", "2,27,2,44,8,5046,5039,2,0");
-	}
-	if (to_boolean(available_choices["cs"])) {
-		set_property("c2t_ascend", "2,3,2,25,2,5046,5040,2,0");
-	}
-}
-
-void yachtzee() {
-	if (my_inebriety() > inebriety_limit()) {
-		print("We're overdrunk. Running Garbo overdrunk turns.", "blue");
-		cli_execute("garbo");
-	}
-
-	if (get_property(to_int("ascensionsToday") == 1)) {
-		if (to_boolean(available_choices["gyou"])) {
-			print("We have ascended today and it was a gyou run. We will not Yachtzeechain this leg.", "blue");
-			cli_execute("garbo");
-		}
-		else {
-			print("We have ascended today, and it was a CS run. We will Yachtzeechain this leg.", "blue");
-			cli_execute("garbo yachtzeechain");
-		}
-	}
-	else {
-		print("We have not ascended today. Breakfast leg always does Yachtzee!", "blue");
-		cli_execute("garbo yachtzeechain ascend workshed=cmc");
-	}
 }
