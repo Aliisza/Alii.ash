@@ -42,37 +42,155 @@ void HandleC2T() {
 		set_property("c2t_ascend", "2,27,2,44,8,5046,5039,2,0");
 	}
 	if (available_choices["cs"]) {
-		set_property("c2t_ascend", "2,3,2,25,2,5046,5037,2,0");
+		set_property("c2t_ascend", "2,1,2,25,4,5046,5035,2,0");#####  2,3,2,25,2,5046,5035,2,0  #####
+	}														   #####       Settings for PM      #####
+}
+
+void getBofaWish() {
+		print("Getting the Bofa pocket wishes!", "teal");
+		if(my_class() == $class[Pastamancer]) {
+		use_familiar($familiar[Patriotic Eagle]);
+		maximize("item drop, -equip broken champagne bottle", false);
+		use_skill(1, $skill[map the monsters]);
+		visit_url("adventure.php?snarfblat=354");
+		visit_url("choice.php?forceoption=0&option=1&pwd&whichchoice=1435&heyscriptswhatsupwinkwink=12");
+		run_combat("skill 7450; skill Saucegeyser; repeat");
+		use_familiar($familiar[Pocket Professor]);
+		adv1($location[The Degrassi Knoll Garage], 1, "attack; repeat");
+		adv1($location[The Degrassi Knoll Garage], 1, "attack; repeat");
+		}
+		if(my_class() == $class[Seal Clubber]) {
+			maximize("item drop, -equip broken champagne bottle", false);
+			use_familiar($familiar[Pocket Professor]);
+			while(get_property("_bookOfFactsWishes").to_int() < 3) {
+				adv1($location[Shadow Rift (Desert Beach)], 1, "attack; repeat");
+			}
+		}
+}
+
+boolean unlockGuild() {
+	int internalQuestStatus(string prop) {
+	string status = get_property(prop);
+	if(status == "unstarted") {
+		return -1;
 	}
+	if(status == "started") {
+		return 0;
+	}
+	if(status == "finished") {
+		//Does not handle quests with over 9998 steps. That\'s the Gnome letter quest, yes?
+		return 9999;
+	}
+	matcher my_element = create_matcher("step(\\d+)", status);
+	if(my_element.find()) {
+		return to_int(my_element.group(1));
+	}
+	return -1;
+	}
+	string pref;
+	location loc = $location[None];
+	item goal = $item[none];
+	use_familiar($familiar[Pair of Stomping Boots]);
+	maximize("+com, .1 familiar weight", false);
+	switch(my_primestat()) {
+		case $stat[Muscle]:
+			pref = "questG09Muscle";
+			loc = $location[The Outskirts of Cobb\'s Knob];
+			goal = $item[11-Inch Knob Sausage];
+			break;
+		case $stat[Mysticality]:
+			pref = "questG07Myst";
+			loc = $location[The Haunted Pantry];
+			goal = $item[Exorcised Sandwich];
+			break;
+		case $stat[Moxie]:
+			goal = equipped_item($slot[pants]);
+			pref = "questG08Moxie";
+			if(internalQuestStatus(pref) < 1) {
+				loc = $location[The Sleazy Back Alley];
+			}
+			break;
+	}
+	if(loc != $location[none]) {
+		if(get_property(pref) != "started") {
+			string temp = visit_url("guild.php?place=challenge");
+		}
+		if(internalQuestStatus(pref) < 0) {
+			print("Visiting the guild failed to set guild quest.", "red");
+			return false;
+		}
+		while(item_amount(goal) != 1) {
+			adv1(loc, -1, "runaway; abort");
+		}
+		if (internalQuestStatus(pref) == 1) {
+			//Complete quest then spam visit a couple nerds to unlock degrassi gnoll and distant woods
+			visit_url("guild.php?place=challenge");
+			visit_url("guild.php?place=paco");
+			visit_url("guild.php?place=paco");
+			visit_url("guild.php?place=paco");
+			visit_url("choice.php?pwd&whichchoice=930&option=2");
+			visit_url("guild.php?place=scg");
+			visit_url("guild.php?place=scg");
+		}
+		return true;
+	}
+	return false;
 }
 
 void yachtzee() {
-	if(my_adventures() == 0 && my_inebriety() > inebriety_limit()) {
+	if(get_property("ascensionsToday").to_int() == 1 && my_inebriety() > inebriety_limit()) {
+		print("we're overdrunk, and have ascended today. No more garb'ing!", "red");
+	}else if(my_adventures() == 0 && my_inebriety() > inebriety_limit()) {
 		print("We're overdrunk, and have used all our turns. This leg is finished. Moving on to ascending.", "red");
-	}else if (my_inebriety() > inebriety_limit()) {
-		print("We're overdrunk. Running Garbo overdrunk turns.", "blue");
-		cli_execute("garbo");
-		}else if(get_property("ascensionsToday").to_int() == 1) {
-				print("We have already ascended today. We will not Yachtzeechain this leg.", "blue");
-				cli_execute("garbo");
-			}else {
-				print("We have not ascended today. Breakfast leg always does Yachtzee!", "blue");
-				if(!to_boolean(get_property("_sleazeAirportToday"))){
-					if (item_amount($item[one-day ticket to Spring Break Beach]) > 0 || buy(1, $item[one-day ticket to Spring Break Beach], 375000) > 0)  {
-							use(1, $item[one-day ticket to Spring Break Beach]);
-					}
-				}
-			cli_execute("garbo yachtzeechain ascend workshed=cmc");
-			cli_execute("shrug ur-kel");
-			cli_execute("drink stillsuit distillate");
-			cli_execute("CONSUME NIGHTCAP");
-			}		
+		}else if (my_inebriety() > inebriety_limit()) {
+			print("We're overdrunk. Running Garbo overdrunk turns.", "blue");
+			cli_execute("garbo ascend");
+			}else if(get_property("ascensionsToday").to_int() == 1) {
+					print("We have already ascended today. We will not Yachtzeechain this leg.", "blue");
+					cli_execute("garbo");
+				}else {
+					print("We have not ascended today. Breakfast leg sometimes does Yachtzee!(If I feel like it)", "blue");
+					/*if(!to_boolean(get_property("_sleazeAirportToday"))){
+						if (item_amount($item[one-day ticket to Spring Break Beach]) > 0 || buy(1, $item[one-day ticket to Spring Break Beach], 375000) > 0)  {
+								use(1, $item[one-day ticket to Spring Break Beach]);
+						}
+					}*/
+					if(my_class() == $class[Pastamancer]){
+						cli_execute("garbo ascend workshed=cmc -3");//Save 3 turns so we can cast RWB blast, then overdrink and get wishes
+						set_property("_monstersMapped", "2");
+						if(get_property("__bookOfFactsWishes") < 3) {
+							getBofaWish();
+						}
+						}else {
+							cli_execute("garbo ascend workshed=cmc -10");
+							if(get_property("__bookOfFactsWishes") < 3) {
+								getBofaWish();
+							}
+						}
+				cli_execute("shrug ur-kel");
+				cli_execute("drink stillsuit distillate");
+				cli_execute("CONSUME NIGHTCAP");
+				}		
+}
+
+void buyTix() {
+		//Buy as many day passes as bux allow
+	if (get_property("_stenchAirportToday").to_boolean()) {
+		buy($coinmaster[The Dinsey Company Store], floor((item_amount($item[Funfunds&trade;]) / 20)), $item[One-day ticket to dinseylandfill]);
+	}
+	if (get_property("_sleazeAirportToday").to_boolean()) {
+		buy($coinmaster[Buff Jimmy's Souvenir Shop], floor((item_amount($item[Beach Buck]) / 100)), $item[One-day ticket to Spring Break Beach]);
+	}
 }
 
 void coffee() {
 	print("Doing start-of-day activities!", "teal");
 	if(!get_property("_coffeeBegin").to_boolean()){
 		cli_execute("ptrack add coffeeBegin");
+		//Increment Map the monsters by 1 so garbo saves us a cast
+		if(my_class() == $class[Pastamancer]) {
+			set_property("_monstersMapped", "1");
+		}
 		set_property("_coffeeBegin", "true");
 	}
 	if(!to_boolean(get_property("breakfastCompleted"))){
@@ -92,6 +210,13 @@ void coffee() {
 	} // FYI: Garbo usually doesn't use one of these, so free 5 adventures. Yay!
 	yachtzee();
 	yachtzee();
+	buyTix();
+	if(get_property("_augSkillsCAst").to_int() < 5) {
+		print("Garbo didn't cast all of the scepter skills. Burning remaining casts.", "red");
+		foreach sk in $skills[7455, 7456, 7475, 7480, 7482] {
+			use_skill(sk);
+		}
+	}
 }
 
 void ascend() {
@@ -99,6 +224,13 @@ void ascend() {
 		abort("You have not nightcapped yet! Overdrink and burn turns, then run again!");
 	}else if(my_inebriety() > inebriety_limit() && my_adventures() > 0){
 		abort("You have nightcapped, but have turns remaining! Burn turns, then run again!");
+	}
+	
+	foreach it in $items[calzone of legend, deep dish of legend, pizza of legend] {
+		if(item_amount(it) < 1) {
+			print('Crafting 1 {it}');
+			cli_execute('make {it}');
+		}
 	}
 	print("Jumping through the Gash!", "teal");
 	HandleC2T();
@@ -132,10 +264,13 @@ void cs() {
 		cli_execute("ptrack add csBegin");
 		set_property("_csBegin", "true");
 	}
-	cli_execute("lcswrapper");
-	cli_execute("make deep dish of legend");
+	cli_execute("SeraSCCS");//Temp trying out Sera's version
 	use($item[Asdon Martin keyfob]);
 	visit_url(`uneffect.php?using=Yep.&pwd&whicheffect={$effect[Citizen of a Zone].id}`);//try uneffecting madness bakery eagle buff so garbo gets meat
+	if(!item_amount($item[Bitchin' Meatcar]).to_boolean() || !item_amount($item[Desert Bus Pass]).to_boolean()){
+    	cli_execute("make bitchin' meatcar");
+  	}
+	unlockGuild();
 }
 
 void lunch() {
@@ -211,36 +346,35 @@ void smoke() {
 		}
 	} //FYI: Garbo usually doesn't use one of these, so free 5 adventures. Yay!
 	yachtzee();
-	cli_execute("shrug ur-kel");
-	cli_execute("CONSUME NIGHTCAP");
-	if(get_property("_augSkillsCast").to_int() == 4) {
-		print("Casting Offhand Remarkable.", "blue");
-		use_skill(1, $skill[7464]);
-	}
-	retrieve_item($item[Burning cape]);
-	//Buy as many day passes as Disney bucks and beach bucks allow
-	if (get_property("_dinseyGarbageDisposed").to_boolean()) {
-		buy($coinmaster[The Dinsey Company Store], floor((item_amount($item[Funfunds&trade;]) / 20)), $item[One-day ticket to dinseylandfill]);
-	}
-	if (get_property("_sleazeAirportToday").to_boolean()) {
-		buy($coinmaster[Buff Jimmy's Souvenir Shop], floor((item_amount($item[Beach Buck]) / 100)), $item[One-day ticket to Spring Break Beach]);
+	buyTix();
+	if(my_adventures() == 0) {
+		cli_execute("shrug ur-kel");
+		cli_execute("CONSUME NIGHTCAP");
+		retrieve_item($item[Burning cape]);
+		if(get_property("_augSkillsCast") < 5) {
+			print("Casting Off-hand Remarkable", "green");
+			use_skill($skill[7464]);//Left/Off handers day
+		}
 	}
 	if (item_amount($item[clockwork maid]) > 0 || buy(1, $item[clockwork maid], get_property("valueOfAdventure").to_int() * 8) > 0)  {
     		use(1, $item[clockwork maid]);
 	}// Refrains from using a clockwork maid if you it's lower then 8x VOA 
-	cli_execute("rollover management.ash");
-	//Maximize string that prioritizes adventures, and values sasq watch for the meat buff
-	maximize(`{get_property("valueOfAdventure")} adventures, 15000 bonus ¶7776, +equip ratskin pajama pants, +equip spacegate scientists insignia`, false);
-	cli_execute("ptrack add smokeEnd");
-	cli_execute("mallbuy 9999 surprisingly capacious handbag @ 120");
-	cli_execute("mallbuy 9999 fireclutch @ 650");
-	cli_execute("pTrack recap");
-
+	if(item_amount($item[Burning cape]) > 0) {
+		cli_execute("rollover management.ash");
+		//Maximize string that prioritizes adventures, and values sasq watch for the meat buff
+		maximize(`{get_property("valueOfAdventure")} adventures, 15000 bonus ¶7776, +equip ratskin pajama pants, +equip spacegate scientists insignia`, false);
+		cli_execute("ptrack add smokeEnd");
+		cli_execute("mallbuy 9999 surprisingly capacious handbag @ 120");
+		cli_execute("mallbuy 9999 fireclutch @ 650");
+		cli_execute("pTrack recap");
+	}
 	if (item_amount($item[navel ring of navel gazing]) > 0) {
 		print("Returning ring to Noob.");
 		kmail("Noobsauce", "Returning your ring.", 0, int[item] {$item[navel ring of navel gazing] : 1});
 	}
-	cli_execute("raffle 11");
+	if(item_amount($item[raffle ticket]) < 0) {
+		cli_execute("raffle 11");
+	}
 	print("Done!", "teal");
-	print("Don't forget to check out the free Aug Scepter skill and cast if it's useful.", "pink");
+	print("Check for the free August Scepter skill.", "teal");
 }
