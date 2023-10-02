@@ -43,7 +43,7 @@ void HandleC2T() {
 	}
 	if (available_choices["cs"]) {
 		set_property("c2t_ascend", "2,1,2,25,4,5046,5035,2,0");#####  2,3,2,25,2,5046,5035,2,0  #####
-	}														   #####       Settings for PM      #####
+	}						               #####       Settings for PM      #####
 }
 
 void getBofaWish() {
