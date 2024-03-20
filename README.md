@@ -12,10 +12,10 @@ To install, paste the following into the CGLI:
 To run, type `alii "tasks"` into the CGLI. 
 
 List of tasks:
-coffee, ascend, gyou, cs, lunch, smoke.
+coffee, ascend, gyou, cs, smol, lunch, smoke.
 
 List of abbreviations:
-cloop, gloop, post
+cloop, gloop, sloop, gnash, crash, slash
 
 Examples of possible calls:
 `alii cloop` Runs a full day while looping CS and doing yachtzeechains.
@@ -24,7 +24,7 @@ Examples of possible calls:
 
 `alii coffee ascend cs smoke` Same as if you ran "cloop". Script allows you to run individual tasks at a time, or group them together with multiple arguments.
 
-`alii post` Post runs only lunch and smoke. Used in cases where the grey you run crashes midway thru. Allows you to pickup the post run farming with a single arg.
+`alii crash` Post runs only lunch and smoke. Used in cases where the grey you run crashes midway thru. Allows you to pickup the post run farming with a single arg.
 
 
 ## Script Dependancies:
